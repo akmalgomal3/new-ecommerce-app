@@ -42,10 +42,4 @@ export class OrderController {
     }
     return await this.orderService.getOrders(req.user);
   }
-
-  @Get('/test')
-  async testEndpoint() {
-    console.log('Test endpoint hit');
-    return { success: true, message: 'Test endpoint is working' };
-  }
 }

@@ -107,7 +107,7 @@ The response contains the following keys:
 
 - `data` (object) - Contains the token for successful authentication.
 
-    - `token` (string) - The authentication token.
+  - `token` (string) - The authentication token.
 
 - `error` (null) - Null if no error occurred.
 
@@ -290,17 +290,17 @@ This request does not require a request body.
 
 - `data` (array): An array of product objects, each containing the following:
 
-    - `id` (integer): The unique identifier of the product.
+  - `id` (integer): The unique identifier of the product.
 
-    - `name` (string): The name of the product.
+  - `name` (string): The name of the product.
 
-    - `price` (string): The price of the product.
+  - `price` (string): The price of the product.
 
-    - `quantity` (integer): The available quantity of the product.
+  - `quantity` (integer): The available quantity of the product.
 
-    - `seller_id` (integer): The unique identifier of the seller.
+  - `seller_id` (integer): The unique identifier of the seller.
 
-    - `created_at` (string): The timestamp of when the product was created.
+  - `created_at` (string): The timestamp of when the product was created.
 
 - `error` (null): Indicates any error that occurred during the request.
 
@@ -415,15 +415,15 @@ This request does not require a request body.
 
 - `data` (array): An array of order objects, each containing the following fields:
 
-    - `id` (integer): The unique identifier of the order.
+  - `id` (integer): The unique identifier of the order.
 
-    - `buyer_id` (integer): The ID of the buyer associated with the order.
+  - `buyer_id` (integer): The ID of the buyer associated with the order.
 
-    - `product_id` (integer): The ID of the product in the order.
+  - `product_id` (integer): The ID of the product in the order.
 
-    - `quantity` (integer): The quantity of the product in the order.
+  - `quantity` (integer): The quantity of the product in the order.
 
-    - `created_at` (string): The timestamp indicating when the order was created.
+  - `created_at` (string): The timestamp indicating when the order was created.
 
 - `error` (null): Indicates no error in the response.
 
@@ -459,6 +459,73 @@ This request does not require a request body.
 |Content-Type|Value|
 |---|---|
 |Authorization|Bearer |
+
+
+
+⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
+
+## End-point: getAUsers
+This endpoint retrieves user data based on the provided name parameter. The response returns a JSON object with a success status, data array containing user details, error message, and meta information if available.
+
+``` json
+{
+  "type": "object",
+  "properties": {
+    "success": {
+      "type": "boolean"
+    },
+    "code": {
+      "type": "integer"
+    },
+    "data": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "error": {
+      "type": ["string", "null"]
+    },
+    "meta": {
+      "type": ["object", "null"]
+    }
+  }
+}
+
+ ```
+### Method: GET
+>```
+>/v1/users?name=akmal
+>```
+### Headers
+
+|Content-Type|Value|
+|---|---|
+|Authorization|Bearer |
+
+
+### Query Params
+
+|Param|value|
+|---|---|
+|name|akmal|
 
 
 

@@ -25,14 +25,18 @@ export class AuthGuard implements CanActivate {
     const token = authHeader.split(' ')[1];
 
     return new Promise((resolve, reject) => {
-      jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err) {
-          reject(new ForbiddenException('Forbidden: Invalid token'));
-        } else {
-          request.user = { userId: decoded.userId, role: decoded.role }; // Ensure request.user has the expected attributes
-          resolve(true);
-        }
-      });
+      jwt.verify(
+        token,
+        process.env.JWT_SECRET,
+        (err: any, decoded: { userId: any; role: any }) => {
+          if (err) {
+            reject(new ForbiddenException('Forbidden: Invalid token'));
+          } else {
+            request.user = { userId: decoded.userId, role: decoded.role };
+            resolve(true);
+          }
+        },
+      );
     });
   }
 }
