@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { dbQueries } from '../queries/order.queries';
 import { dbPool } from '../database/database.module';
+import { createResponse } from '../utils/response.util';
 
 @Injectable()
 export class OrderService {
@@ -9,16 +10,10 @@ export class OrderService {
     user: { role: string; userId: any },
   ) {
     if (!user || user.role !== 'buyer') {
-      return {
-        success: false,
-        code: 403,
-        data: null,
-        error: {
-          message: 'Forbidden: Only buyers can place orders',
-          details: null,
-        },
-        meta: null,
-      };
+      return createResponse(false, 403, null, {
+        message: 'Forbidden: Only buyers can place orders',
+        details: null,
+      });
     }
     const { productId, quantity } = body;
     await dbPool.query(dbQueries.insertOrder, [
@@ -26,28 +21,19 @@ export class OrderService {
       productId,
       quantity,
     ]);
-    return { success: true, code: 201, data: null, error: null, meta: null };
+    return createResponse(true, 201);
   }
 
   async getOrders(user: { userId: any }) {
     if (!user || !user.userId) {
-      return {
-        success: false,
-        code: 400,
-        data: null,
-        error: { message: 'Invalid user data', details: null },
-        meta: null,
-      };
+      return createResponse(false, 400, null, {
+        message: 'Invalid user data',
+        details: null,
+      });
     }
     const res = await dbPool.query(dbQueries.selectOrdersByUserId, [
       user.userId,
     ]);
-    return {
-      success: true,
-      code: 200,
-      data: res.rows,
-      error: null,
-      meta: null,
-    };
+    return createResponse(true, 200, res.rows);
   }
 }

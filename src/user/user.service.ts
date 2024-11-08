@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { dbQueries } from '../queries/user.queries';
 import { dbPool, redisClient } from '../database/database.module';
 import { bcrypt, jwt } from '../utils/utils.module';
+import { createResponse } from '../utils/response.util';
 
 @Injectable()
 export class UserService {
@@ -9,43 +10,31 @@ export class UserService {
     const { username, password, role } = body;
     const hash = await bcrypt.hash(password, 10);
     await dbPool.query(dbQueries.insertUser, [username, hash, role]);
-    return { success: true, code: 201, data: null, error: null, meta: null };
+    return createResponse(true, 201);
   }
 
   async login(body: { username: any; password: any }) {
     const { username, password } = body;
     const res = await dbPool.query(dbQueries.selectUserByUsername, [username]);
     if (res.rows.length === 0) {
-      return {
-        success: false,
-        code: 404,
-        data: null,
-        error: { message: 'User not found', details: null },
-        meta: null,
-      };
+      return createResponse(false, 404, null, {
+        message: 'User not found',
+        details: null,
+      });
     }
     const user = res.rows[0];
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
-      return {
-        success: false,
-        code: 401,
-        data: null,
-        error: { message: 'Invalid password', details: null },
-        meta: null,
-      };
+      return createResponse(false, 401, null, {
+        message: 'Invalid password',
+        details: null,
+      });
     }
     const token = jwt.sign(
       { userId: user.id, role: user.role },
       process.env.JWT_SECRET,
     );
-    return {
-      success: true,
-      code: 200,
-      data: { token },
-      error: null,
-      meta: null,
-    };
+    return createResponse(true, 200, { token });
   }
 
   async getUsers(name: any) {
@@ -65,6 +54,6 @@ export class UserService {
     } else {
       users = JSON.parse(users);
     }
-    return { success: true, code: 200, data: users, error: null, meta: null };
+    return createResponse(true, 200, users);
   }
 }

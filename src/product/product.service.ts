@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { dbQueries } from '../queries/product.queries';
 import { dbPool } from '../database/database.module';
+import { createResponse } from '../utils/response.util';
 
 @Injectable()
 export class ProductService {
@@ -9,22 +10,16 @@ export class ProductService {
     user: { role: string; userId: any },
   ) {
     if (!user || !user.role) {
-      return {
-        success: false,
-        code: 400,
-        data: null,
-        error: { message: 'Invalid user data', details: null },
-        meta: null,
-      };
+      return createResponse(false, 400, null, {
+        message: 'Invalid user data',
+        details: null,
+      });
     }
     if (user.role !== 'seller') {
-      return {
-        success: false,
-        code: 403,
-        data: null,
-        error: { message: 'Forbidden', details: null },
-        meta: null,
-      };
+      return createResponse(false, 403, null, {
+        message: 'Forbidden',
+        details: null,
+      });
     }
     const { name, price, quantity } = body;
     await dbPool.query(dbQueries.insertProduct, [
@@ -33,17 +28,11 @@ export class ProductService {
       quantity,
       user.userId,
     ]);
-    return { success: true, code: 201, data: null, error: null, meta: null };
+    return createResponse(true, 201);
   }
 
   async getProducts() {
     const res = await dbPool.query(dbQueries.selectAllProducts);
-    return {
-      success: true,
-      code: 200,
-      data: res.rows,
-      error: null,
-      meta: null,
-    };
+    return createResponse(true, 200, res.rows);
   }
 }
